@@ -4,15 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Very Handy Solution, Inc.</title>
+    <title>Admin Dashboard | VeryHandy Solution, Inc.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function () {
-            emailjs.init("maDuu7gZPHwXvuk9A");
-        })();
-    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -97,8 +92,8 @@
                     <i class="fa-solid fa-wrench"></i>
                 </div>
                 <div>
-                    <span class="block text-white font-black uppercase tracking-tighter text-lg leading-none">Very
-                        Handy</span>
+                    <span
+                        class="block text-white font-black uppercase tracking-tighter text-lg leading-none">VeryHandy</span>
                     <span
                         class="block text-[8px] font-black uppercase tracking-[0.2em] text-blue-500 mt-1 leading-none">Admin
                         Panel</span>
@@ -159,7 +154,7 @@
                 <div>
                     <h1 id="page-title" class="text-3xl font-black text-slate-900 tracking-tight uppercase">Admin
                         Dashboard</h1>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Very Handy Solution, Inc.
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">VeryHandy Solution, Inc.
                     </p>
                 </div>
                 <div class="flex items-center gap-4">
@@ -747,36 +742,20 @@
             if (error) {
                 alert("Error updating status: " + error.message);
             } else {
-                // Trigger Email Notification via EmailJS (Client-Side)
-                const clientName = "Client"; // Ideally fetch this from booking data, but simple default is ok
-                // We need to fetch the client email. The current table data 'b.profiles?.email' is not directly passed here.
-                // Let's quickly re-fetch the specific booking to get the email and name to be safe.
-                const { data: bookingDetails } = await _supabase
-                    .from('bookings')
-                    .select('*, profiles:client_id(email, full_name)')
-                    .eq('id', id)
-                    .single();
+                // Trigger Email Notification via Edge Function (Resend)
+                const { error: notifyErr } = await _supabase.functions.invoke('send-booking-notification', {
+                    body: {
+                        bookingId: id,
+                        newStatus: newStatus,
+                        type: 'status_update'
+                    }
+                });
 
-                if (bookingDetails && bookingDetails.profiles) {
-                    const templateParams = {
-                        to_email: bookingDetails.profiles.email,
-                        to_name: bookingDetails.profiles.full_name || "Valued Client",
-                        new_status: newStatus,
-                        service_type: bookingDetails.service_type || "Service",
-                        booking_date: new Date(bookingDetails.booking_date).toLocaleDateString(),
-                        message_content: `Your booking status has been updated to ${newStatus}.`
-                    };
-
-                    emailjs.send("service_drvw8nu", "template_jxd78b6", templateParams)
-                        .then(function (response) {
-                            console.log('SUCCESS!', response.status, response.text);
-                            // alert("✅ Email Sent to Client!");
-                        }, function (error) {
-                            console.log('FAILED...', error);
-                            alert("⚠️ Status updated, but EmailJS failed: " + JSON.stringify(error));
-                        });
+                if (notifyErr) {
+                    console.error("Notification Error:", notifyErr);
+                    alert("⚠️ Status updated, but email alert failed.");
                 } else {
-                    console.warn("Could not fetch client email for notification.");
+                    console.log("Email Notification Sent via Resend.");
                 }
 
                 alert(`✅ Status updated to "${newStatus}".`);

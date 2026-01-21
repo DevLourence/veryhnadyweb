@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Transaction Tester | VeryHandy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .test-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            padding: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .test-card-inner {
+            background: white;
+            border-radius: 22px;
+            padding: 24px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .log-entry {
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 12px;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .log-info {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .log-success {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+        }
+
+        .log-error {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-black text-slate-900 uppercase tracking-tight mb-3">Email Transaction Tester</h1>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">VeryHandy Solution - Email System
+                Diagnostics</p>
+            <div class="mt-6 inline-flex items-center gap-3 bg-white px-6 py-3 rounded-2xl shadow-lg">
+                <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-xs font-black uppercase tracking-wider text-slate-700">System Ready</span>
+            </div>
+        </div>
+
+        <!-- Test Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Test 1: OTP Verification (Signup) -->
+            <div class="test-card">
+                <div class="test-card-inner">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-envelope-open-text text-blue-600 text-xl"></i>
+                        </div>
+                        <span id="status-1" class="status-badge status-pending">Ready</span>
+                    </div>
+                    <h3 class="font-black text-slate-900 text-sm uppercase tracking-wide mb-2">OTP Verification</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-semibold">Test signup email with 6-digit code</p>
+                    <input type="email" id="email-1" placeholder="test@example.com"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="name-1" placeholder="Full Name"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="testOtpVerification()"
+                        class="w-full bg-blue-600 text-white font-black py-3 rounded-xl uppercase text-xs tracking-wider hover:bg-blue-700 transition">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>Send Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test 2: Password Reset -->
+            <div class="test-card">
+                <div class="test-card-inner">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-key text-purple-600 text-xl"></i>
+                        </div>
+                        <span id="status-2" class="status-badge status-pending">Ready</span>
+                    </div>
+                    <h3 class="font-black text-slate-900 text-sm uppercase tracking-wide mb-2">Password Reset</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-semibold">Test password recovery email</p>
+                    <input type="email" id="email-2" placeholder="test@example.com"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-purple-500">
+                    <button onclick="testPasswordReset()"
+                        class="w-full bg-purple-600 text-white font-black py-3 rounded-xl uppercase text-xs tracking-wider hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>Send Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test 3: New Booking (Admin) -->
+            <div class="test-card">
+                <div class="test-card-inner">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-bell text-green-600 text-xl"></i>
+                        </div>
+                        <span id="status-3" class="status-badge status-pending">Ready</span>
+                    </div>
+                    <h3 class="font-black text-slate-900 text-sm uppercase tracking-wide mb-2">New Booking Alert</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-semibold">Test admin notification email</p>
+                    <input type="text" id="service-3" placeholder="Service Type (e.g., Plumbing)"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="text" id="client-3" placeholder="Client Name"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-green-500">
+                    <button onclick="testNewBooking()"
+                        class="w-full bg-green-600 text-white font-black py-3 rounded-xl uppercase text-xs tracking-wider hover:bg-green-700 transition">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>Send Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test 4: Booking Status Update (Client) -->
+            <div class="test-card">
+                <div class="test-card-inner">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-sync text-amber-600 text-xl"></i>
+                        </div>
+                        <span id="status-4" class="status-badge status-pending">Ready</span>
+                    </div>
+                    <h3 class="font-black text-slate-900 text-sm uppercase tracking-wide mb-2">Status Update</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-semibold">Test client status notification</p>
+                    <input type="email" id="email-4" placeholder="client@example.com"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-amber-500">
+                    <select id="status-select-4"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="confirmed">Confirmed</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <button onclick="testStatusUpdate()"
+                        class="w-full bg-amber-600 text-white font-black py-3 rounded-xl uppercase text-xs tracking-wider hover:bg-amber-700 transition">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>Send Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test 5: New Review (Admin) -->
+            <div class="test-card">
+                <div class="test-card-inner">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-star text-rose-600 text-xl"></i>
+                        </div>
+                        <span id="status-5" class="status-badge status-pending">Ready</span>
+                    </div>
+                    <h3 class="font-black text-slate-900 text-sm uppercase tracking-wide mb-2">New Review Alert</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-semibold">Test admin review notification</p>
+                    <input type="number" id="rating-5" placeholder="Rating (1-5)" min="1" max="5"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-rose-500">
+                    <textarea id="comment-5" placeholder="Review comment" rows="2"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-rose-500"></textarea>
+                    <button onclick="testNewReview()"
+                        class="w-full bg-rose-600 text-white font-black py-3 rounded-xl uppercase text-xs tracking-wider hover:bg-rose-700 transition">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>Send Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test All -->
+            <div class="test-card">
+                <div class="test-card-inner">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-rocket text-white text-xl"></i>
+                        </div>
+                        <span class="status-badge" style="background: #1e293b; color: white;">Batch</span>
+                    </div>
+                    <h3 class="font-black text-slate-900 text-sm uppercase tracking-wide mb-2">Run All Tests</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-semibold">Execute all email transactions</p>
+                    <input type="email" id="email-all" placeholder="test@example.com"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold mb-3 outline-none focus:ring-2 focus:ring-slate-500">
+                    <button onclick="runAllTests()"
+                        class="w-full bg-slate-900 text-white font-black py-3 rounded-xl uppercase text-xs tracking-wider hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-bolt mr-2"></i>Run All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight">Activity Log</h2>
+                <button onclick="clearLog()"
+                    class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-slate-200 transition">
+                    <i class="fa-solid fa-trash mr-2"></i>Clear
+                </button>
+            </div>
+            <div id="log-container" class="max-h-96 overflow-y-auto">
+                <div class="log-entry log-info">
+                    <i class="fa-solid fa-info-circle mr-2"></i>
+                    <strong>System Ready:</strong> Email transaction tester initialized successfully.
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-3xl p-8 border-2 border-blue-100">
+            <h3 class="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">
+                <i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i>Testing Instructions
+            </h3>
+            <ul class="space-y-3 text-sm text-slate-700">
+                <li class="flex items-start gap-3">
+                    <i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+                    <span><strong>Important:</strong> Emails are sent via Resend API. In test mode, emails can only be
+                        sent to the verified sender email address.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+                    <span><strong>OTP Code:</strong> The generated OTP will be logged in the browser console for easy
+                        testing.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+                    <span><strong>Admin Email:</strong> New booking and review notifications are sent to the admin
+                        email configured in Supabase environment variables.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+                    <span><strong>Check Spam:</strong> If you don't receive emails, check your spam/junk folder.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i class="fa-solid fa-check-circle text-green-600 mt-1"></i>
+                    <span><strong>Response Time:</strong> Email delivery may take 5-30 seconds depending on the email
+                        service provider.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://qakgewjfhemqgxxfcdvi.supabase.co'.trim();
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFha2dld2pmaGVtcWd4eGZjZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3ODk5MTcsImV4cCI6MjA4NDM2NTkxN30.JIcu_7Veehn370s6e0L60R5gtGKQG7ZmVwnOpKREXlo'.trim();
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function log(message, type = 'info') {
+            const container = document.getElementById('log-container');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+
+            entry.innerHTML = `
+                <i class="fa-solid fa-${icon} mr-2"></i>
+                <strong>[${timestamp}]</strong> ${message}
+            `;
+
+            container.insertBefore(entry, container.firstChild);
+        }
+
+        function updateStatus(testId, status) {
+            const badge = document.getElementById(`status-${testId}`);
+            badge.className = `status-badge status-${status}`;
+            badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        }
+
+        function clearLog() {
+            const container = document.getElementById('log-container');
+            container.innerHTML = `
+                <div class="log-entry log-info">
+                    <i class="fa-solid fa-info-circle mr-2"></i>
+                    <strong>Log Cleared:</strong> Activity log has been reset.
+                </div>
+            `;
+        }
+
+        async function testOtpVerification() {
+            const email = document.getElementById('email-1').value.trim();
+            const name = document.getElementById('name-1').value.trim() || 'Test User';
+
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+
+            updateStatus(1, 'pending');
+            log(`Testing OTP Verification for ${email}...`, 'info');
+
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            console.log('🔐 Generated OTP:', otp);
+
+            try {
+                const { data, error } = await _supabase.functions.invoke('send-booking-notification', {
+                    body: {
+                        type: 'otp_verification',
+                        email: email,
+                        otp: otp,
+                        name: name
+                    }
+                });
+
+                if (error) throw error;
+                if (data && data.success === false) throw new Error(JSON.stringify(data.error));
+
+                updateStatus(1, 'success');
+                log(`✅ OTP Email sent successfully! Code: ${otp} | Email ID: ${data?.id || 'N/A'}`, 'success');
+                console.log('📧 Email Response:', data);
+            } catch (err) {
+                updateStatus(1, 'error');
+                log(`❌ OTP Email failed: ${err.message}`, 'error');
+                console.error('Error:', err);
+            }
+        }
+
+        async function testPasswordReset() {
+            const email = document.getElementById('email-2').value.trim();
+
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+
+            updateStatus(2, 'pending');
+            log(`Testing Password Reset for ${email}...`, 'info');
+
+            try {
+                const { data, error } = await _supabase.functions.invoke('send-booking-notification', {
+                    body: {
+                        type: 'password_reset',
+                        email: email
+                    }
+                });
+
+                if (error) throw error;
+                if (data && data.success === false) throw new Error(JSON.stringify(data.error));
+
+                updateStatus(2, 'success');
+                log(`✅ Password Reset email sent successfully! Email ID: ${data?.id || 'N/A'}`, 'success');
+                console.log('📧 Email Response:', data);
+            } catch (err) {
+                updateStatus(2, 'error');
+                log(`❌ Password Reset failed: ${err.message}`, 'error');
+                console.error('Error:', err);
+            }
+        }
+
+        async function testNewBooking() {
+            const service = document.getElementById('service-3').value.trim() || 'Test Service';
+            const client = document.getElementById('client-3').value.trim() || 'Test Client';
+
+            updateStatus(3, 'pending');
+            log(`Testing New Booking notification (Service: ${service})...`, 'info');
+
+            try {
+                const { data, error } = await _supabase.functions.invoke('send-booking-notification', {
+                    body: {
+                        type: 'new_booking',
+                        bookingId: 'TEST-' + Date.now(),
+                        email: client + '@test.com',
+                        name: client
+                    }
+                });
+
+                if (error) throw error;
+                if (data && data.success === false) throw new Error(JSON.stringify(data.error));
+
+                updateStatus(3, 'success');
+                log(`✅ New Booking notification sent to admin! Email ID: ${data?.id || 'N/A'}`, 'success');
+                console.log('📧 Email Response:', data);
+            } catch (err) {
+                updateStatus(3, 'error');
+                log(`❌ New Booking notification failed: ${err.message}`, 'error');
+                console.error('Error:', err);
+            }
+        }
+
+        async function testStatusUpdate() {
+            const email = document.getElementById('email-4').value.trim();
+            const status = document.getElementById('status-select-4').value;
+
+            if (!email) {
+                alert('Please enter a client email address');
+                return;
+            }
+
+            updateStatus(4, 'pending');
+            log(`Testing Status Update (${status}) for ${email}...`, 'info');
+
+            try {
+                const { data, error } = await _supabase.functions.invoke('send-booking-notification', {
+                    body: {
+                        type: 'status_update',
+                        bookingId: 'TEST-' + Date.now(),
+                        newStatus: status,
+                        email: email,
+                        name: 'Test Client'
+                    }
+                });
+
+                if (error) throw error;
+                if (data && data.success === false) throw new Error(JSON.stringify(data.error));
+
+                updateStatus(4, 'success');
+                log(`✅ Status Update email sent successfully! Email ID: ${data?.id || 'N/A'}`, 'success');
+                console.log('📧 Email Response:', data);
+            } catch (err) {
+                updateStatus(4, 'error');
+                log(`❌ Status Update failed: ${err.message}`, 'error');
+                console.error('Error:', err);
+            }
+        }
+
+        async function testNewReview() {
+            const rating = document.getElementById('rating-5').value || 5;
+            const comment = document.getElementById('comment-5').value.trim() || 'Great service!';
+
+            updateStatus(5, 'pending');
+            log(`Testing New Review notification (${rating} stars)...`, 'info');
+
+            try {
+                const { data, error } = await _supabase.functions.invoke('send-booking-notification', {
+                    body: {
+                        type: 'new_review',
+                        rating: parseInt(rating),
+                        comment: comment,
+                        name: 'Test Client'
+                    }
+                });
+
+                if (error) throw error;
+                if (data && data.success === false) throw new Error(JSON.stringify(data.error));
+
+                updateStatus(5, 'success');
+                log(`✅ New Review notification sent to admin! Email ID: ${data?.id || 'N/A'}`, 'success');
+                console.log('📧 Email Response:', data);
+            } catch (err) {
+                updateStatus(5, 'error');
+                log(`❌ New Review notification failed: ${err.message}`, 'error');
+                console.error('Error:', err);
+            }
+        }
+
+        async function runAllTests() {
+            const email = document.getElementById('email-all').value.trim();
+
+            if (!email) {
+                alert('Please enter an email address for batch testing');
+                return;
+            }
+
+            log('🚀 Starting batch test of all email transactions...', 'info');
+
+            // Set all inputs
+            document.getElementById('email-1').value = email;
+            document.getElementById('name-1').value = 'Batch Test User';
+            document.getElementById('email-2').value = email;
+            document.getElementById('service-3').value = 'Batch Test Service';
+            document.getElementById('client-3').value = 'Batch Test Client';
+            document.getElementById('email-4').value = email;
+            document.getElementById('rating-5').value = 5;
+            document.getElementById('comment-5').value = 'Automated batch test review';
+
+            // Run tests sequentially with delays
+            await testOtpVerification();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testPasswordReset();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testNewBooking();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testStatusUpdate();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testNewReview();
+
+            log('✅ Batch test completed! Check your email inbox and spam folder.', 'success');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🎯 Email Transaction Tester loaded successfully', 'success');
+        });
+    </script>
+</body>
+
+</html>

@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="cYHi8vUq31lpMvwET--fYXT9bWCoUluJzB4LBIscM_U" />
-    <title>Very Handy Home Service Inc. | Reliable Handyman Services</title>
+    <title>VeryHandy Home Service Inc. | Reliable Handyman Services</title>
     <link rel="canonical" href="https://veryhandyhomeservice.com/" />
     <meta name="description"
-        content="Very Handy Home Service Inc. provides professional handyman services including drywall repair, painting, flooring, and furniture assembly. Reliable quality you can trust.">
+        content="VeryHandy Home Service Inc. provides professional handyman services including drywall repair, painting, flooring, and furniture assembly. Reliable quality you can trust.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
@@ -247,6 +247,15 @@
         .text-glow {
             text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
         }
+
+        /* Custom Alert Transitions */
+        #custom-alert {
+            transition: opacity 0.3s ease;
+        }
+
+        #custom-alert-content {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
     </style>
 </head>
 
@@ -258,13 +267,42 @@
         <img id="lightbox-img" src="" class="max-h-[85vh] max-w-[90vw] rounded-lg shadow-2xl border-4 border-white/10">
     </div>
 
+    <!-- Custom Alert Modal (Moved to top for reliable DOM access) -->
+    <div id="custom-alert"
+        class="fixed inset-0 z-[100] hidden pointer-events-none items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 px-4"
+        onclick="if(event.target === this) closeCustomAlert()">
+        <div class="bg-white rounded-[32px] shadow-2xl max-w-sm w-full p-8 transform scale-95 relative overflow-hidden ring-1 ring-white/20"
+            id="custom-alert-content">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 to-pink-500" id="alert-bar">
+            </div>
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-red-50 mb-6 shadow-inner ring-4 ring-red-500/5 transition-colors duration-300"
+                    id="alert-icon-bg">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500 transition-colors duration-300"
+                        id="alert-icon"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight mb-3" id="alert-title">Access
+                    Denied</h3>
+                <p class="text-sm text-slate-500 font-bold leading-relaxed mb-8" id="alert-message">Please check your
+                    input.</p>
+                <button onclick="closeCustomAlert()"
+                    class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl shadow-xl hover:bg-blue-600 transition-all transform hover:-translate-y-1 uppercase text-[10px] tracking-[0.2em] relative overflow-hidden group">
+                    <span class="relative z-10">Dismiss</span>
+                    <div
+                        class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <nav class="glass fixed w-full z-50 border-b border-slate-200 px-4 md:px-6 py-2 flex justify-between items-center">
         <div class="flex items-center space-x-2 md:space-x-4 cursor-pointer" onclick="showView('landing')">
             <img src="image/logo/logo.svg" alt="Logo" class="h-12 md:max-logo">
             <div
                 class="text-xl md:text-2xl font-black text-blue-600 tracking-tighter uppercase whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] md:max-w-none">
-                <span class="hidden md:inline">Very Handy Solution, Inc.</span>
-                <span class="md:hidden">Very Handy Solution</span>
+                <span class="hidden md:inline">VeryHandy Solution, Inc.</span>
+                <span class="md:hidden">VeryHandy Solution</span>
             </div>
         </div>
         <div class="flex space-x-2 md:space-x-4">
@@ -279,7 +317,7 @@
                 <h1
                     class="text-4xl sm:text-5xl md:text-8xl font-black leading-tight mb-6 text-shadow uppercase tracking-tighter">
                     Fix it with <br>
-                    <span class="text-blue-500">Very Handy Solution</span>
+                    <span class="text-blue-500">VeryHandy Solution</span>
                 </h1>
                 <p
                     class="animate-float text-lg md:text-2xl text-slate-100 mb-8 md:mb-10 font-bold text-shadow tracking-wide">
@@ -308,7 +346,7 @@
                         class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Trust</span>
                 </h2>
                 <p class="text-xl md:text-2xl text-slate-500 leading-relaxed mb-12 max-w-4xl mx-auto font-medium">
-                    At <span class="font-black text-blue-600 uppercase tracking-tight">Very Handy Solution, Inc.</span>,
+                    At <span class="font-black text-blue-600 uppercase tracking-tight">VeryHandy Solution, Inc.</span>,
                     we offer a
                     comprehensive range of professional handyman services to keep your home in top condition. Our
                     skilled team
@@ -516,7 +554,7 @@
                 </div>
                 <div class="text-center mb-8">
                     <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight">New Account</h2>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Join Very Handy
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Join VeryHandy
                         Solution</p>
                 </div>
                 <form id="signup-form" onsubmit="handleSignup(event)" class="space-y-4">
@@ -580,6 +618,9 @@
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 px-6">We've sent a
                         6-digit code to <br><span id="pending-email" class="text-blue-600 lowercase font-black"></span>
                     </p>
+                    <button onclick="changeSignupEmail()"
+                        class="text-[9px] text-slate-400 font-bold hover:text-blue-600 underline mt-2 cursor-pointer uppercase tracking-widest">Wrong
+                        Email Address?</button>
                 </div>
                 <div class="grid grid-cols-6 gap-2" id="otp-input-group">
                     <input type="text" maxlength="1"
@@ -664,14 +705,14 @@
                     Verify & Reset
                 </button>
                 <div class="text-center">
-                    <button onclick="resendResetOtp()"
+                    <button onclick="resendResetOtp()" id="resend-reset-btn"
                         class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-blue-600 transition">Problem?
                         Request New Code</button>
                 </div>
             </div>
 
             <!-- Update Password Form -->
-            <div id="form-update-password" class="space-y-6 hidden">
+            <div id="form-update" class="space-y-6 hidden">
                 <div class="text-center mb-8">
                     <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight">Security Upgrade</h2>
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Define your new
@@ -682,6 +723,12 @@
                         <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">New Secure
                             Password</label>
                         <input type="password" id="update-password" required
+                            class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/5 focus:bg-white focus:border-blue-500 transition-all font-bold text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Confirm
+                            Password</label>
+                        <input type="password" id="update-password-confirm" required
                             class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/5 focus:bg-white focus:border-blue-500 transition-all font-bold text-sm">
                     </div>
                     <button type="submit" id="update-btn"
@@ -696,8 +743,8 @@
     <footer class="bg-slate-900 text-slate-400 py-16 text-center">
         <div class="max-w-4xl mx-auto px-6">
             <div class="w-24 mx-auto mb-6"><img src="image/logo/logo.svg" alt="Logo" class="w-full"></div>
-            <h2 class="text-white text-2xl font-black mb-4 uppercase">Very Handy Solution, Inc.</h2>
-            <p class="mb-4 text-sm">Thank you for visiting Very Handy Solution! We are dedicated to providing
+            <h2 class="text-white text-2xl font-black mb-4 uppercase">VeryHandy Solution, Inc.</h2>
+            <p class="mb-4 text-sm">Thank you for visiting VeryHandy Solution! We are dedicated to providing
                 quality craftsmanship and exceptional customer service.</p>
             <p class="text-xs tracking-widest uppercase">&copy; 2026 All Rights Reserved.</p>
         </div>
@@ -708,6 +755,67 @@
         const SUPABASE_URL = 'https://qakgewjfhemqgxxfcdvi.supabase.co'.trim();
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFha2dld2pmaGVtcWd4eGZjZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3ODk5MTcsImV4cCI6MjA4NDM2NTkxN30.JIcu_7Veehn370s6e0L60R5gtGKQG7ZmVwnOpKREXlo'.trim();
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // --- CUSTOM ALERT LOGIC ---
+        function showAlert(title, message, type = 'error') {
+            const modal = document.getElementById('custom-alert');
+            const container = document.getElementById('custom-alert-content');
+            const alertTitle = document.getElementById('alert-title');
+            const alertMsg = document.getElementById('alert-message');
+            const iconBg = document.getElementById('alert-icon-bg');
+            const bar = document.getElementById('alert-bar');
+
+            if (!modal) {
+                console.error("Alert Modal Missing in DOM");
+                alert(title + "\n" + message); // Fallback to native alert
+                return;
+            }
+
+            if (alertTitle) alertTitle.textContent = title;
+            if (alertMsg) alertMsg.textContent = message;
+
+            modal.classList.remove('hidden');
+            // Force reflow
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+
+            if (container) {
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }
+
+            if (iconBg) {
+                if (type === 'success') {
+                    iconBg.className = 'mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-50 mb-6 shadow-inner ring-4 ring-green-500/5';
+                    iconBg.innerHTML = '<i class="fa-solid fa-check text-3xl text-green-500"></i>';
+                    if (alertTitle) alertTitle.className = 'text-xl font-black text-slate-800 uppercase tracking-tight mb-3 text-green-600';
+                    if (bar) bar.className = 'absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-green-400 to-emerald-500';
+                } else {
+                    iconBg.className = 'mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-red-50 mb-6 shadow-inner ring-4 ring-red-500/5';
+                    iconBg.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-3xl text-red-500"></i>';
+                    if (alertTitle) alertTitle.className = 'text-xl font-black text-slate-800 uppercase tracking-tight mb-3 text-red-600';
+                    if (bar) bar.className = 'absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 to-pink-500';
+                }
+            } else {
+                console.warn("Alert Icon Element missing");
+            }
+        }
+
+        function closeCustomAlert() {
+            const modal = document.getElementById('custom-alert');
+            const container = document.getElementById('custom-alert-content');
+            if (!modal) return;
+
+            modal.classList.add('opacity-0');
+            if (container) {
+                container.classList.add('scale-95');
+                container.classList.remove('scale-100');
+            }
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
 
         // --- MOBILE INPUT INIT ---
         const mobileInput = document.querySelector("#signup-mobile");
@@ -770,14 +878,16 @@
 
             } catch (err) {
                 console.error("Signin Error:", err);
-                alert("Security Error: " + err.message);
+                showAlert("Access Denied", err.message || "Invalid credentials provided.", 'error');
             } finally {
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
         }
 
-        // --- SIGN UP LOGIC ---
+        // --- CUSTOM OTT (SMTP) LOGIC ---
+        let signupEmail = "";
+
         async function handleSignup(e) {
             e.preventDefault();
             const email = document.getElementById('signup-email').value.trim();
@@ -790,13 +900,16 @@
 
             if (!iti.isValidNumber()) return alert("⚠️ Operation Halted: Invalid mobile number format.");
 
-            btn.innerText = "INITIALIZING CORE...";
+            btn.innerText = "SENDING CODE...";
             btn.disabled = true;
 
             try {
+                signupEmail = email; // Store for verification/resend
+
+                // Create user immediately. Supabase handles the "unconfirmed" state.
                 const { data, error } = await _supabase.auth.signUp({
-                    email,
-                    password,
+                    email: email,
+                    password: password,
                     options: {
                         data: {
                             full_name: fullName,
@@ -809,13 +922,24 @@
 
                 if (error) throw error;
 
+                // Check if session was created immediately (auto-confirm enabled?)
+                if (data.session) {
+                    alert("✅ Account Verified! Redirecting...");
+                    window.location.href = 'client_dashboard.html';
+                    return;
+                }
+
+                // Show OTP input screen
                 document.getElementById('pending-email').innerText = email;
                 toggleAuthMode('otp');
-                alert("✅ Account Initialized: Verification code dispatched to your inbox.");
+
+                // Clear and focus OTP fields
+                document.querySelectorAll('.otp-field').forEach(field => field.value = '');
+                document.querySelector('.otp-field').focus();
 
             } catch (err) {
                 console.error("Signup Error:", err);
-                alert("Initialization Failed: " + err.message);
+                showAlert("Registration Failed", err.message, 'error');
             } finally {
                 btn.innerText = "Initialize Account";
                 btn.disabled = false;
@@ -823,23 +947,57 @@
         }
 
         async function verifySignupOtp() {
-            const email = document.getElementById('pending-email').innerText;
-            const token = Array.from(document.querySelectorAll('.otp-field')).map(i => i.value).join('');
+            const enteredToken = Array.from(document.querySelectorAll('.otp-field')).map(i => i.value).join('');
             const btn = document.getElementById('otp-btn');
 
-            if (token.length < 6) return alert("⚠️ Security Alert: 6-digit verification code required.");
+            // Robustly get email (variable or UI)
+            if (!signupEmail) {
+                const uiEmail = document.getElementById('pending-email').innerText;
+                signupEmail = uiEmail ? uiEmail.trim() : "";
+            }
 
-            btn.innerText = "VALIDATING TOKEN...";
+            if (enteredToken.length < 6) return alert("⚠️ Input Error: 6-digit code required.");
+
+            btn.innerText = "VERIFYING...";
             btn.disabled = true;
 
             try {
-                const { error } = await _supabase.auth.verifyOtp({ email, token, type: 'signup' });
+                // Attempt 1: Verify as Signup Confirmation
+                let { data, error } = await _supabase.auth.verifyOtp({
+                    email: signupEmail,
+                    token: enteredToken,
+                    type: 'signup'
+                });
+
+                // Attempt 2: If Signup fails, try Email (Magic Link/Login OTP)
+                // This handles cases where the user state might be ambiguous or previously registered
+                if (error) {
+                    console.warn("Signup verification failed (" + error.message + "), attempting 'email' type...");
+                    const secondAttempt = await _supabase.auth.verifyOtp({
+                        email: signupEmail,
+                        token: enteredToken,
+                        type: 'email'
+                    });
+
+                    if (secondAttempt.error) {
+                        // If both fail, throw the original error (or improved message)
+                        console.error("Email verification also failed:", secondAttempt.error);
+                        throw error;
+                    }
+                    // Success on second attempt
+                    data = secondAttempt.data;
+                    error = null;
+                }
+
                 if (error) throw error;
 
-                alert("✅ Identity Verified: Proceed to Login.");
-                toggleAuthMode('signin');
+                // Success! Redirect.
+                showAlert("Success!", "Account Verified! Redirecting to dashboard...", 'success');
+                setTimeout(() => window.location.href = 'client_dashboard.html', 2000);
+
             } catch (err) {
-                alert("Validation Failed: " + err.message);
+                console.error("OTP Verification Error:", err);
+                showAlert("Verification Failed", err.message + ". Please ensure you are entering the most recent code.", 'error');
             } finally {
                 btn.innerText = "Confirm Verification";
                 btn.disabled = false;
@@ -847,9 +1005,36 @@
         }
 
         async function resendSignupOtp() {
-            const email = document.getElementById('pending-email').innerText;
-            const { error } = await _supabase.auth.resend({ type: 'signup', email });
-            alert(error ? "❌ Resend Failed: " + error.message : "📧 Token Redispatched: Check your inbox.");
+            const btn = document.querySelector('#view-otp button:last-child');
+            const originalText = btn.innerText;
+            btn.innerText = "Sending...";
+
+            try {
+                // Resend signup confirmation
+                const { error } = await _supabase.auth.resend({
+                    type: 'signup',
+                    email: signupEmail
+                });
+
+                if (error) throw error;
+
+                alert("✅ New code sent! Check your email.");
+                document.querySelectorAll('.otp-field').forEach(field => field.value = '');
+                document.querySelector('.otp-field').focus();
+
+            } catch (e) {
+                console.error("Resend Error:", e);
+                alert("❌ Failed to resend: " + e.message);
+            } finally {
+                btn.innerText = originalText;
+            }
+        }
+
+        function changeSignupEmail() {
+            toggleAuthMode('signup');
+            const btn = document.getElementById('signup-btn');
+            btn.innerText = "Initialize Account";
+            btn.disabled = false;
         }
 
         // --- FORGOT PASSWORD LOGIC ---
@@ -862,14 +1047,18 @@
             btn.disabled = true;
 
             try {
+                // Use Standard Supabase Reset (Semantic Recovery)
+                // User MUST update their Supabase "Reset Password" Email Template to show {{ .Token }}
                 const { error } = await _supabase.auth.resetPasswordForEmail(email);
+
                 if (error) throw error;
 
                 document.getElementById('pending-reset-email').innerText = email;
                 toggleAuthMode('reset-otp');
-                alert("✅ Recovery Protocol Initiated: Check your email for the security code.");
+                showAlert("Recovery Initiated", "Check your email for the recovery code.", 'success');
             } catch (err) {
-                alert("Recovery Failed: " + err.message);
+                console.error("Reset Error:", err);
+                showAlert("Recovery Failed", err.message, 'error');
             } finally {
                 btn.innerText = "Begin Recovery";
                 btn.disabled = false;
@@ -881,18 +1070,26 @@
             const token = Array.from(document.querySelectorAll('.reset-otp-field')).map(i => i.value).join('');
             const btn = document.getElementById('reset-otp-btn');
 
-            if (token.length < 6) return alert("⚠️ Security Alert: 6-digit recovery code required.");
+            if (token.length < 6) return showAlert("Security Alert", "6-digit recovery code required.", 'error');
 
             btn.innerText = "ESTABLISHING SECURE CHANNEL...";
             btn.disabled = true;
 
             try {
-                const { error } = await _supabase.auth.verifyOtp({ email, token, type: 'recovery' });
-                if (error) throw error;
+                // Dual Verify Strategy: Try 'recovery' first, then 'email' fallback
+                let { error } = await _supabase.auth.verifyOtp({ email, token, type: 'recovery' });
+
+                if (error) {
+                    console.log("Recovery type verification failed (" + error.message + "), trying 'email' type...");
+                    const fallback = await _supabase.auth.verifyOtp({ email, token, type: 'email' });
+                    if (fallback.error) {
+                        throw fallback.error;
+                    }
+                }
 
                 toggleAuthMode('update');
             } catch (err) {
-                alert("Security Link Broken: " + err.message);
+                showAlert("Security Link Broken", err.message, 'error');
             } finally {
                 btn.innerText = "Verify & Reset";
                 btn.disabled = false;
@@ -901,14 +1098,37 @@
 
         async function resendResetOtp() {
             const email = document.getElementById('pending-reset-email').innerText;
-            await _supabase.auth.resetPasswordForEmail(email);
-            alert("📧 New Recovery Token Dispatched.");
+            const btn = document.getElementById('resend-reset-btn');
+            const originalText = btn.innerText;
+
+            btn.innerText = "SENDING NEW CODE...";
+            btn.disabled = true;
+
+            try {
+                const { error } = await _supabase.auth.resetPasswordForEmail(email);
+                if (error) throw error;
+
+                showAlert("New Token Dispatched", "Check your email for the new code.", 'success');
+            } catch (e) {
+                showAlert("Failed to resend", e.message, 'error');
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         }
 
         async function handleUpdatePassword(e) {
             e.preventDefault();
             const password = document.getElementById('update-password').value;
+            const confirm = document.getElementById('update-password-confirm').value;
             const btn = document.getElementById('update-btn');
+
+            if (password !== confirm) {
+                return showAlert("Mismatch", "Passwords do not match.", "error");
+            }
+            if (password.length < 6) {
+                return showAlert("Too Weak", "Password must be at least 6 characters.", "error");
+            }
 
             btn.innerText = "APPLYING UPGRADE...";
             btn.disabled = true;
@@ -917,10 +1137,10 @@
                 const { error } = await _supabase.auth.updateUser({ password });
                 if (error) throw error;
 
-                alert("✅ Security Upgrade Successful: Login with your new password.");
+                showAlert("Security Upgrade Successful", "Login with your new password.", 'success');
                 toggleAuthMode('signin');
             } catch (err) {
-                alert("Upgrade Failed: " + err.message);
+                showAlert("Upgrade Failed", err.message, 'error');
             } finally {
                 btn.innerText = "Apply Changes";
                 btn.disabled = false;
@@ -937,6 +1157,18 @@
                 document.getElementById('view-' + id).classList.add('active');
                 document.body.style.overflow = 'auto';
                 document.getElementById('view-login').classList.remove('active');
+
+                // Reset all forms and state
+                const forms = ['signup-form', 'forgot-password-form', 'update-password-form'];
+                forms.forEach(fid => {
+                    const f = document.getElementById(fid);
+                    if (f) f.reset();
+                });
+                const signinForm = document.querySelector('#form-signin form');
+                if (signinForm) signinForm.reset();
+
+                document.querySelectorAll('.otp-field, .reset-otp-field').forEach(i => i.value = '');
+                toggleAuthMode('signin');
             }
         }
 
@@ -1108,11 +1340,21 @@
         }
 
         async function checkSession() {
-            // "Don't automatically login"
-            // We check if a session exists and sign out immediately to ensure the user must enter credentials.
+            // Check if we are handling a Recovery/Magic Link
+            const hash = window.location.hash;
+            const isRecovery = hash && (hash.includes('type=recovery') || hash.includes('type=magiclink') || hash.includes('access_token'));
+
+            // If it's a normal visit (no link), sign out to force manual credentials (as per policy)
             const { data: { session } } = await _supabase.auth.getSession();
-            if (session) {
+            if (session && !isRecovery) {
+                console.log("Clearing persistent session (Force Login Mode)");
                 await _supabase.auth.signOut();
+            } else if (isRecovery) {
+                console.log("Recovery Link Detected. Preserving session.");
+                // If it is specifically a recovery link, show update form
+                if (hash.includes('type=recovery')) {
+                    setTimeout(() => toggleAuthMode('update'), 500); // Small delay to let Supabase process
+                }
             }
         }
 
@@ -1121,8 +1363,17 @@
             fetchPublicReviews();
             checkSession();
             AOS.init({ duration: 1000, once: true });
+
+            // Listen for Auth Events (specifically Recovery)
+            _supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'PASSWORD_RECOVERY') {
+                    toggleAuthMode('update');
+                    showAlert("Identity Verified", "Please set your new password.", "success");
+                }
+            });
         });
     </script>
+
 </body>
 
 </html>
